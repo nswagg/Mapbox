@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>NSWAGG_Embed</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
+	<link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet"/>
+<style>
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+	h2,
+	h3 {
+		margin: 10px;
+		font-size: 18px;
+	}
+	h3 {
+		font-size: 16px;
+	}
+	p {
+		margin: 10px;
+	}
+	.map-overlay {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		background: #fff;
+		margin-right: 20px;
+		overflow: auto;
+		border-radius: 3px;
+	}
+	#map {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+	}
+
+	#legend {
+		padding: 10px;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		line-height: 18px;
+		height: 150px;
+		margin-bottom: 40px;
+		width: 120px;
+	}
+	.legend-key {
+		display: inline-block;
+		border-radius: 20%;
+		width: 10px;
+		height: 10px;
+		margin-right: 5px;
+	}
+	.legend-fault {
+		display: inline-block;
+		border-radius: 20%;
+		width: 10px;
+		height: 2px;
+		margin-right: 5px;
+	}
+</style>
+</head>
+<body>
+	<div id="map"></div>
+	<div class="map-overlay" id="legend"></div>
+	<script>
+		// define access token
+		mapboxgl.accessToken = 'pk.eyJ1IjoibnN3YWdnIiwiYSI6ImNrdHE4cG55azB0ejEybm11N21samw5c3YifQ.164L6otfChZfmGbF2GMDoQ';
+		 
+		// create map
+		const map = new mapboxgl.Map({
+		container: 'map', // container id
+		style: 'mapbox://styles/nswagg/cku6d397t005217nxro34xi39' // map style URL
+		});
+	
+		 // disable map rotation using right click + drag
+		map.dragRotate.disable();
+ 
+		// disable map rotation using touch rotation gesture
+		map.touchZoomRotate.disableRotation();
+		
+		
+		// wait for map to load before adjusting it
+		map.on('load', () => {
+		// make a pointer cursor
+		map.getCanvas().style.cursor = 'default';
+		 
+		// define layer names
+		const layers = [
+		'Unknown',
+		'Small',
+		'Medium',
+		'Large',
+		'Very Large',
+		'Catastrophic',
+
+		];
+		const colors = [
+		'#6E03D8',
+		'#0171B7',
+		'#349E0A',
+		'#EDED02',
+		'#EF570B',
+		'#FF1500',
+
+		];
+		 
+		// create legend
+		const legend = document.getElementById('legend');
+		document.getElementById("legend").innerHTML = ("Landslide Size").bold();
+		
+		layers.forEach((layer, i) => {
+		const color = colors[i];
+		const item = document.createElement('div');
+		const key = document.createElement('span');
+		key.className = 'legend-key';
+		key.style.backgroundColor = color;	
+		
+		const value = document.createElement('span');
+		value.innerHTML = `${layer}`;
+		item.appendChild(key);
+		item.appendChild(value);
+		legend.appendChild(item);
+		});
+		const item = document.createElement('div');
+		const key = document.createElement('span');
+		key.className = 'legend-fault';
+		key.style.backgroundColor = '#FF1500';
+		const value = document.createElement('span');
+		value.innerHTML = 'Fault Line';
+		item.appendChild(key);
+		item.appendChild(value);
+		legend.appendChild(item);
+		});
+		
+	</script>
+</body>
+</html>
