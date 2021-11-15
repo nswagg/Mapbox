@@ -7,6 +7,7 @@ const map = new mapboxgl.Map({
     zoom: 1.00
 });
 
+/*
 map.on('load', () => {
     map.addSource('tileset_data', {
         'url': 'nswagg.cku8smniz0a8o23pyxm93dmi0-4w436',
@@ -73,3 +74,4 @@ map.on('load', () => {
     });
 
 });
+*/
