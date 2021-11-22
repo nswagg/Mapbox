@@ -27,7 +27,7 @@
     const map = new mapboxgl.Map({
       container: 'map',
       // Replace YOUR_STYLE_URL with your style URL.
-      style: 'mapbox://styles/nswagg/ckvra8f8o5vrw14qrtwsxuepu', 
+      style: 'mapbox://styles/nswagg/ckwayohrr3b2814pccxnbjouq', 
       center: [0.0, 30.0],
       zoom: 1.35
     });
@@ -39,7 +39,7 @@ Add an event listener that runs
 map.on('click', (event) => {
   // If the user clicked on one of your markers, get its information.
   const features = map.queryRenderedFeatures(event.point, {
-    layers: ['Global_Landslide_Catalog_Expo-480csv'] // replace with your layer name
+    layers: ['Landslide_Catalog-b0qqmf'] // replace with your layer name
   });
   if (!features.length) {
     return;
@@ -53,7 +53,7 @@ map.on('click', (event) => {
 const popup = new mapboxgl.Popup({ offset: [0, -15] })
   .setLngLat(feature.geometry.coordinates)
   .setHTML(
-    `<h3>${feature.properties.event_title}</h3><p>${feature.properties.event_description}</p>`
+    `<h3>${feature.properties.event_title}</h3><p>${feature.properties.event_description}${feature.properties.fatality_count}</p>`
   )
   .addTo(map);
 });
