@@ -81,6 +81,11 @@
         </div>
       </div>
 
+      <div class='session' id='sliderbar'>
+        <h2>Year: <label id='active-year'>2003</label></h2>
+        <input id='slider' class='row' type='range' min='1988' max='2017' step='1' value='2003' />
+      </div>
+
     </div>
     <script>
     // The value for 'accessToken' begins with 'pk...'
@@ -224,8 +229,22 @@
         22,
         0.1
       ]
-    }
+    },
+
+    filter: ['==', ['number', ['get', 'event_date']], 6/2/2006]
   });
+  document.getElementById('slider').addEventListener('input', (event) => {
+  const date = parseInt(event.target.value);
+  // update the map
+  map.setFilter('collisions', ['==', ['number', ['get', 'event_date']], date]);
+
+  // converting 0-23 hour to AMPM format
+  //const ampm = hour >= 12 ? 'PM' : 'AM';
+  //const hour12 = hour % 12 ? hour % 12 : 12;
+
+  // update text in the UI
+  document.getElementById('active-hour').innerText = hour12 + ampm;
+});
 });
 /* 
 Add an event listener that runs
