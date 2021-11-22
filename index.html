@@ -40,13 +40,47 @@
         padding: 10px 20px;
         background-color: white;
       }
+
+      .session {
+        margin-bottom: 20px;
+      }
+
+      .row {
+        height: 12px;
+        width: 100%;
+      }
+
+      .colors {
+        background: linear-gradient(to right, #6e03d8, #019dfe, #44ce0d, #fdfd21, #ef570b, #ff1500);
+        margin-bottom: 5px;
+      }
+
+      .label {
+        width: 18.3%;
+        display: inline-block;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
     <div id='map'></div>
     <div id='console'>
       <h1>Landslides</h1>
-      <p>Data: <a href='https://data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95'>Global Landslides by Size and Casualties</a> from 1988 to 2017</p>
+      <p>Data: <a href='https://data.nasa.gov/Earth-Science/Global-Landslide-Catalog-Export/dd9e-wu2v/data'>NASA's Global Landslide Catalog (GLC)</a> from 1988 to 2017</p>
+      
+      <div class='session'>
+        <h2>Casualties</h2>
+        <div class='row colors'>
+        </div>
+        <div class='row labels'>
+          <div class='label'>0</div>
+          <div class='label'>100</div>
+          <div class='label'>1000</div>
+          <div class='label'>3000</div>
+          <div class='label'>5000+</div>
+        </div>
+      </div>
+
     </div>
     <script>
     // The value for 'accessToken' begins with 'pk...'
@@ -56,9 +90,143 @@
       // Replace YOUR_STYLE_URL with your style URL.
       style: 'mapbox://styles/nswagg/ckwayohrr3b2814pccxnbjouq', 
       center: [0.0, 30.0],
-      zoom: 1.35
+      zoom: 2.00
     });
 
+    map.on('load', () => {
+  map.addLayer({
+    id: 'collisions',
+    type: 'circle',
+    source: {
+      type: 'geojson',
+      data: 'https://github.com/nswagg/Mapbox/blob/main/Landslide_Catalog.geojson' // replace this with the url of your own geojson
+    },
+    paint: {
+      'circle-radius': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        0,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          0.8
+        ],
+        5,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          0.8800000000000001
+        ],
+        10,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          1.1199999999999999
+        ],
+        22,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          1.6
+        ]
+      ],
+      'circle-color': [
+        "match",
+        ["get", "landslide_size"],
+        ["unknown", ""],
+        "#6e03d8",
+        "small",
+        "#019dfe",
+        "medium",
+        "#44ce0d",
+        "large",
+        "#fdfd21",
+        "very_large",
+        "#ef570b",
+        "catastrophic",
+        "ff1500",
+      ],
+      'circle-opacity': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        0,
+        0.1,
+        22,
+        0.1
+      ]
+    }
+  });
+});
 /* 
 Add an event listener that runs
   when a user clicks on the map element.
@@ -72,7 +240,7 @@ map.on('click', (event) => {
     return;
   }
   const feature = features[0];
-
+ 
   /* 
     Create a popup, specify its options 
     and properties, and add it to the map.
