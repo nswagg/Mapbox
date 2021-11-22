@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>NASA Landslides Interactive</title>
+    <title>NASA Data - Landslides</title>
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css' rel='stylesheet' />
@@ -17,10 +17,37 @@
         bottom: 0; 
         width: 100%; 
       }
+      h1 {
+        font-size: 20px;
+        line-height: 30px;
+      }
+
+      h2 {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 10px;
+      }
+
+      a {
+        text-decoration: none;
+        color: #2dc4b2;
+      }
+
+      #console {
+        position: absolute;
+        width: 240px;
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: white;
+      }
     </style>
   </head>
   <body>
     <div id='map'></div>
+    <div id='console'>
+      <h1>Landslides</h1>
+      <p>Data: <a href='https://data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95'>Global Landslides by Size and Casualties</a> from 1988 to 2017</p>
+    </div>
     <script>
     // The value for 'accessToken' begins with 'pk...'
     mapboxgl.accessToken = 'pk.eyJ1IjoibnN3YWdnIiwiYSI6ImNrdHE4cG55azB0ejEybm11N21samw5c3YifQ.164L6otfChZfmGbF2GMDoQ'; 
