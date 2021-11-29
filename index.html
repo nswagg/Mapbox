@@ -2,7 +2,7 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8' />
-    <title>NASA Landslides Interactive</title>
+    <title>NASA Data - Landslides</title>
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css' rel='stylesheet' />
@@ -17,21 +17,238 @@
         bottom: 0; 
         width: 100%; 
       }
+      h1 {
+        font-size: 20px;
+        line-height: 30px;
+      }
+
+      h2 {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 10px;
+      }
+
+      a {
+        text-decoration: none;
+        color: #2dc4b2;
+      }
+
+      #console {
+        position: absolute;
+        width: 240px;
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: white;
+      }
+
+      .session {
+        margin-bottom: 20px;
+      }
+
+      .row {
+        height: 12px;
+        width: 100%;
+      }
+
+      .colors {
+        background: linear-gradient(to right, #6e03d8, #019dfe, #44ce0d, #fdfd21, #ef570b, #ff1500);
+        margin-bottom: 5px;
+      }
+
+      .label {
+        width: 18.3%;
+        display: inline-block;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
     <div id='map'></div>
+    <div id='console'>
+      <h1>Landslides</h1>
+      <p>Data: <a href='https://data.nasa.gov/Earth-Science/Global-Landslide-Catalog-Export/dd9e-wu2v/data'>NASA's Global Landslide Catalog (GLC)</a> from 1988 to 2017</p>
+      
+      <div class='session'>
+        <h2>Casualties</h2>
+        <div class='row colors'>
+        </div>
+        <div class='row labels'>
+          <div class='label'>0</div>
+          <div class='label'>100</div>
+          <div class='label'>1000</div>
+          <div class='label'>3000</div>
+          <div class='label'>5000+</div>
+        </div>
+      </div>
+
+      <div class='session' id='sliderbar'>
+        <h2>Year: <label id='active-year'>2003</label></h2>
+        <input id='slider' class='row' type='range' min='1988' max='2017' step='1' value='2003' />
+      </div>
+
+    </div>
     <script>
     // The value for 'accessToken' begins with 'pk...'
     mapboxgl.accessToken = 'pk.eyJ1IjoibnN3YWdnIiwiYSI6ImNrdHE4cG55azB0ejEybm11N21samw5c3YifQ.164L6otfChZfmGbF2GMDoQ'; 
     const map = new mapboxgl.Map({
       container: 'map',
       // Replace YOUR_STYLE_URL with your style URL.
-      style: 'mapbox://styles/nswagg/ckwayohrr3b2814pccxnbjouq', 
+      style: 'mapbox://styles/nswagg/ckvra8f8o5vrw14qrtwsxuepu', 
       center: [0.0, 30.0],
-      zoom: 1.35
+      zoom: 2.00 //starting Zoom
     });
 
+    map.dragRotate.disable(); //disable map rotation using right click + drag
+    map.touchZoomRotate.disableRotation(); //disable rotation using touch gesture
+
+map.on('load', () => {
+  map.addLayer({
+    id: 'collisions',
+    type: 'circle',
+    source: {
+      type: 'geojson',
+      data: 'https://github.com/nswagg/Mapbox/blob/main/Landslide_Catalog.geojson' // replace this with the url of your own geojson
+    },
+    paint: {
+      'circle-radius': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        0,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          0.8
+        ],
+        5,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          0.8800000000000001
+        ],
+        10,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          1.1199999999999999
+        ],
+        22,
+        [
+          "*",
+          [
+            "interpolate",
+            ["exponential", 1],
+            [
+              "get",
+              "fatality_count"
+            ],
+            0,
+            3,
+            100,
+            9,
+            1000,
+            12,
+            3000,
+            15,
+            5000,
+            21
+          ],
+          1.6
+        ]
+      ],
+      'circle-color': [
+        "match",
+        ["get", "landslide_size"],
+        ["unknown", ""],
+        "#6e03d8",
+        "small",
+        "#019dfe",
+        "medium",
+        "#44ce0d",
+        "large",
+        "#fdfd21",
+        "very_large",
+        "#ef570b",
+        "catastrophic",
+        "ff1500",
+      ],
+      'circle-opacity': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        0,
+        0.1,
+        22,
+        0.1
+      ]
+    },
+
+    filter: ['==', ['number', ['get', 'event_date']], 6/2/2006]
+  });
+  document.getElementById('slider').addEventListener('input', (event) => {
+  const date = parseInt(event.target.value);
+  // update the map
+  map.setFilter('collisions', ['==', ['number', ['get', 'event_date']], date]);
+
+  // converting 0-23 hour to AMPM format
+  //const ampm = hour >= 12 ? 'PM' : 'AM';
+  //const hour12 = hour % 12 ? hour % 12 : 12;
+
+  // update text in the UI
+  document.getElementById('active-hour').innerText = hour12 + ampm;
+});
+});
 /* 
 Add an event listener that runs
   when a user clicks on the map element.
@@ -45,7 +262,7 @@ map.on('click', (event) => {
     return;
   }
   const feature = features[0];
-
+ 
   /* 
     Create a popup, specify its options 
     and properties, and add it to the map.
@@ -53,8 +270,9 @@ map.on('click', (event) => {
 const popup = new mapboxgl.Popup({ offset: [0, -15] })
   .setLngLat(feature.geometry.coordinates)
   .setHTML(
-    `<h3>${feature.properties.event_title}</h3><p>${feature.properties.event_description}</p>
-    <p>Fatalities: ${feature.properties.fatality_count}</p>`
+    `<h3><a href= ${feature.properties.source_link}>${feature.properties.event_title}</a></h3>
+    <p>Fatalities: ${feature.properties.fatality_count}</p>
+    <p>Date: ${feature.properties.event_date}</p>`
   )
   .addTo(map);
 });
