@@ -284,6 +284,7 @@ const popup = new mapboxgl.Popup({ offset: [0, -15] })
   .setHTML(
     `<h3><a href= ${feature.properties.source_link}>${feature.properties.event_title}</a></h3>
     <p>Fatalities: ${feature.properties.fatality_count}</p>
+    <p>Landslide Size: ${feature.properties.landslide_size}</p>
     <p>Date: ${feature.properties.event_date}</p>`
   )
   .addTo(map);
