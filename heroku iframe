@@ -3,11 +3,5 @@ width='100%'
 height='600px'
 src="https://nswagg-website-embed.herokuapp.com" 
 title="Landslide Size Compared to Number of Fatalities (1988-2017 NASA)" 
-style="border:none;"
-scrolling="no" 
-frameborder="1" 
-marginheight="0px" 
-marginwidth="0px" 
-
-allowfullscreen>
+style="border:none;">
 </iframe>
