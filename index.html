@@ -86,7 +86,7 @@
         <div class='row' id='filters'>
           <input id='all' type='radio' name='toggle' value='all' checked='checked'>
           <label for='all'>Any</label>
-          <input id='rain' type='radio' name='toggle' value='rain' || value='continuous_rain'>
+          <input id='rain' type='radio' name='toggle' value='rain'>
           <label for='rain'>Rain</label>
           <input id='earthquake' type='radio' name='toggle' value='earthquake'>
           <label for='earthquake'>Earthquake</label>
@@ -248,12 +248,12 @@ map.on('load', () => {
   document.getElementById('filters').addEventListener('change', (event) => {
   const trigger = event.target.value;
   // update the map filter
-  if (trigger === 'any') {
-    filterTrigger = ['!=', ['string', ['get', 'landslide_trigger']], 'placeholder'];
+  if (trigger === 'all') {
+    filterTrigger = ['!=', ['string', ['get', 'Trigger']], 'placeholder'];
   } else if (trigger === 'rain') {
-    filterTrigger = ['match', ['get', 'landslide_trigger'], ['Sat', 'Sun'], false, true];
+    filterTrigger = ['match', ['get', 'Trigger'], ['Sat', 'Sun'], false, true];
   } else if (trigger === 'earthqualke') {
-    filterTrigger = ['match', ['get', 'landslide_trigger'], ['Sat', 'Sun'], true, false];
+    filterTrigger = ['match', ['get', 'Trigger'], ['Sat', 'Sun'], true, false];
   } else {
     console.log('error');
   }
