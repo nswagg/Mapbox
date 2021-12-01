@@ -259,9 +259,122 @@ map.on('load', () => {
     console.log('error');
   }
   map.setFilter('data-driven-circles', ['all', filterTrigger]);
+
+  map.addSource('faults', {
+    type: 'vector', 
+    url: 'mapbox://nswagg.5vjubsu3'
+  });
+  map.addLayer({
+    'id': 'faults',
+    'type': 'line',
+    'source': 'faults',
+    'source-layer': 'faultLines',
+
+    'layout': {
+      //make the layer visible by default
+      'visibility':'visible',
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    'paint': {
+      'line-color': '#ff1500',
+      'line-width': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        0,
+        [
+          "*",
+          [
+            "match",
+            ["get", "LAYER"],
+            "plate boundary",
+            0.5,
+            0
+          ],
+          2.4
+        ],
+        10,
+        [
+          "*",
+          [
+            "match",
+            ["get", "LAYER"],
+            "plate boundary",
+            0.5,
+            0
+          ],
+          3.5999999999999996
+        ],
+        22,
+        [
+          "*",
+          [
+            "match",
+            ["get", "LAYER"],
+            "plate boundary",
+            0.5,
+            0
+          ],
+          4.8
+        ]
+      ]
+    }
+  })
 });
 
 });
+
+map.on('idle', () => {
+  // If layer was not added to the map, abort
+  if (!map.getLayer('faults')) {
+    return;
+  }
+  const togglealeLayerIds = ['faults'];
+
+  
+  // Set up the corresponding toggle button for each layer.
+  for (const id of toggleableLayerIds) {
+    // Skip layers that already have a button set up.
+    if (document.getElementById(id)) {
+      continue;
+    }
+    // Create a link.
+    const link = document.createElement('a');
+    link.id = id;
+    link.href = '#';
+    link.textContent = id;
+    link.className = 'active';
+    
+    // Show or hide layer when the toggle is clicked.
+    link.onclick = function (e) {
+    const clickedLayer = this.textContent;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const visibility = map.getLayoutProperty(
+    clickedLayer,
+    'visibility'
+    );
+    
+    // Toggle layer visibility by changing the layout object's visibility property.
+    if (visibility === 'visible') {
+      map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+      this.className = '';
+    } else {
+      this.className = 'active';
+      map.setLayoutProperty(
+      clickedLayer,
+      'visibility',
+      'visible'
+      );
+    }
+  };
+  const layers = document.getElementById('menu');
+  layers.appendChild(link);
+}
+});
+
 /* 
 Add an event listener that runs
   when a user clicks on the map element.
