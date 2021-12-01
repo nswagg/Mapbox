@@ -23,5 +23,6 @@ detailing the news report covering the landslide if applicable (i.e. the news ar
 
 The title header on the legend is also clickable and will redirect to the data source.
 The upper right-hand corner will make the visualization fullscreen.
+The map's rotation and pitch features have been disabled as well.
 
 The fault line toggling and time slider were not able to be implemented for this iteration due to an issue with the format of the data from NASA
