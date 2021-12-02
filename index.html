@@ -94,6 +94,7 @@
 
     map.dragRotate.disable(); //disable map rotation using right click + drag
     map.touchZoomRotate.disableRotation(); //disable rotation using touch gesture
+    map.addControl(new mapboxgl.FullscreenControl()); //Creates popup for users to put page in fullscreen
 
 map.on('load', () => {
   map.addLayer({
